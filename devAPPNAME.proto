@@ -1,0 +1,89 @@
+ReplyTimeout = 500;
+OutTerminator = "\r\n";
+
+@writetimeout { disconnect; }
+@replytimeout { disconnect; }
+@readtimeout  { disconnect; }
+@mismatch     { disconnect; }
+
+setBoundedRate {
+    out "\$1 %(C)f ul/min";
+    in "\n%(\$2){:|>|<|T*}";
+}
+
+infuseEnable {
+    out "irate %(A)f ul/min";
+    in "\n%(\$1){:|>|<|T*}";
+    out "%{stop|irun}";
+    in "\n%(\$1){:|>|<|T*}";
+}
+
+infuseEnableSimple {
+    out "%{stop|irun}";
+    in "\n%(\$1){:|>|<|T*}";
+}
+
+withdrawEnable {
+    out "wrate %(A)f ul/min";
+    in "\n%(\$1){:|>|<|T*}";
+    out "%{stop|wrun}";
+    in "\n%(\$1){:|>|<|T*}";
+}
+
+withdrawEnableSimple {
+    out "%{stop|wrun}";
+    in "\n%(\$1){:|>|<|T*}";
+}
+
+getLims {
+    out "\$1 lim";
+    in "\n%f %(\$2:MinUnits){pl/min|nl/min|ul/min|ml/min} to %(\$2:MaxVal)f %(\$2:MaxUnits){pl/min|nl/min|ul/min|ml/min}\r\n%(\$3){:|>|<|T*}";
+}
+
+getRate {
+    out "crate";
+    in "\nWithdrawing at %f %(\$1)s\r\n(\$2){:|>|<|T*}";
+    @mismatch{in "\nInfusing at %f %(\$1)s\r\n(\$2){:|>|<|T*}";}
+}
+
+targetVol {
+    out "tvolume %f ul";
+    in "\n%(\$1){:|>|<|T*}";
+    @init{out "ctvolume"; in "\n%(\$1){:|>|<|T*}";}
+}
+
+getInfusedVol {
+    out "ivolume";
+    in "\n%f %(\$1:Units){pl|nl|ul|ml|L}\r\n%(\$2){:|>|<|T*}";
+    @init{out "ivolume"; in "\n%f %(\$1:Units){pl|nl|ul|ml|L}\r\n%(\$2){:|>|<|T*}"; }
+}
+
+getWithdrawnVol {
+    out "wvolume";
+    in "\n%f %(\$1:Units){pl|nl|ul|ml|L}\r\n%(\$2){:|>|<|T*}";
+    @init{out "wvolume"; in "\n%f %(\$1:Units){pl|nl|ul|ml|L}\r\n%(\$2){:|>|<|T*}"; }
+}
+
+clearXVol {
+    out "\$1";
+    in "\n%(\$2){:|>|<|T*}";
+}
+
+clearAllVols {
+    out "cvolume";
+    in "\n%(\$1){:|>|<|T*}";
+    out "ctvolume";
+    in "\n%(\$1){:|>|<|T*}";
+}
+
+getIDN {
+    out "ver";
+    in "\n%\$1[^\r\n]\r\n%(\$2){:|>|<|T*}";
+    @init{out "ver"; in "\n%\$1[^\r\n]\r\n%(\$2){:|>|<|T*}";}
+}
+
+quickReverse {
+    out "rrun";
+    in "\n%(\$1){:|>|<|T*}";
+}
+

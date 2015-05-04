@@ -1,0 +1,54 @@
+#The following macros are already defined in the program and can be used in the following
+#   APP_NAME = the name of the folder you run genSCPItemplate
+#   TOP = the full directory of the folder you run genSCPItemplate
+
+# EPICS_BASE and ASYN are needed by makeSupport.pl either as ENV vars or defined here:
+    EPICS_BASE = /Users/atreides/EPICS/base
+    ASYN = /Users/atreides/EPICS/modules/asyn
+# STREAM driver is required for SCPI stuff in the way we plan to do it
+    STREAM = /Users/atreides/EPICS/modules/streams
+# This script will create an ioc application with name $(APP_NAME)$(APP_SUFFIX).  
+# By default the suffix is empty but if you want one set it here:
+    APP_SUFFIX = 
+    
+
+@ $(TOP)/configure/RELEASE {
+    ensure EPICS_BASE = $(EPICS_BASE) 
+    ensure ASYN = $(ASYN) before <# EPICS_BASE>
+    ensure STREAM = $(STREAM) before <# EPICS_BASE>
+}
+
+@ $(TOP)/configure/CONFIG_SITE {
+    ensure CROSS_COMPILER_TARGET_ARCHS = $[EMPTY] after <CROSS_COMPILER_TARGET_ARCHS> 
+}
+
+#@ $(TOP)/$(APP_NAME)Sup/Makefile {
+    #ensure DB_INSTALLS += $(TOP)/$(APP_NAME)Sup/dev$(APP_NAME).proto
+#}
+
+@ $(TOP)/$(APP_NAME)$(APP_SUFFIX)App/src/Makefile {
+    ensure $(APP_NAME)$(APP_SUFFIX)_DBD  += stream.dbd              after <Include dbd files from all support> 
+    ensure $(APP_NAME)$(APP_SUFFIX)_DBD  += drvAsynSerialPort.dbd   after <Include dbd files from all support>
+    ensure $(APP_NAME)$(APP_SUFFIX)_DBD  += asyn.dbd                after <Include dbd files from all support>
+    ensure $(APP_NAME)$(APP_SUFFIX)_LIBS += stream                  after <support libraries needed by> 
+    ensure $(APP_NAME)$(APP_SUFFIX)_LIBS += asyn                    after <support libraries needed by>
+}
+
+#@ $(TOP)/$(APP_NAME)$(APP_SUFFIX)App/Db/Makefile {
+    #ensure DB_INSTALLS += $(ASYN)/db/asynRecord.db
+#}
+
+@ $(TOP)/st.cmd {
+    define P = y
+    define R = y
+    define TTY = /dev/cu.usbmodemD100631
+    define BAUD = 115200
+    define BITS = 8
+    define PARITY = none
+    define STOP = 1
+    define ADDR = 0
+}
+
+@ $(TOP)/dev$(APP_NAME).db {
+    define APP_NAME = $(APP_NAME)
+}
