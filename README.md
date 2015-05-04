@@ -22,7 +22,7 @@ So far tested to work on the following operating systems with EPICS base 3.14.12
 
 * Maps infuse withdraw to +/- rate respectively
 * allows direction change without mode change
-* bound checking on the input rates (code is ugly for this)
+* bound checking on the input rates ~~(code is ugly for this)~~ (code is now gorgeous for this)
 * stop when reached target volume
 * monitor infused/withdrawn volume.
 
