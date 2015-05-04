@@ -7,7 +7,7 @@ Using the template I made for making [SCPI control iocs](https://github.com/full
 
 ```
 cd <Directory Where you Keep IOC apps>
-git clone https://github.com/fullerf/EPICS-KDSLegato130.git <desired application name>
+git clone https://github.com/fullerf/LEGATO130.git <desired application name>
 ./genSCPItemplate.pl
 ```
 
