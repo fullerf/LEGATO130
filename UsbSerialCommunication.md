@@ -1,5 +1,0 @@
-### Minicom Communication
-
-As with the power supply, I wanted to make sure I could manually enter SCPI commands into the device.  I plugged the USB cable into my mac laptop and was pleasantly surprised that a `usbmodemD100631` popped up in `/dev/`.  Go to [minicom](http://pbxbook.com/other/mac-tty.html) and enter the new serial device into the configuration via `minicom -s` in the terminal.  Turn on local echo so you can see what you're typing (`Ctrl-A Z`), and try the command `ver` to see if you get anything.  For me it worked on the first try.
-
-I then worked through [the manual](http://www.kdscientific.com/downloads/KDS%20Literature/Manuals/Legato%20130%20Manual%20Rev%20D.pdf) and tried many of the commands that are found there.  It all works.  Only thing I was unable to do via command was "fast forward" and "fast reverse".  Turns out that this functionality is emulated by just cranking the `irate` or `wrate` up to maximum and hitting `irun` or `wrun` respectively for fast forward and fast reverse.
